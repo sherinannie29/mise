@@ -1,72 +1,179 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { supabase } from "./supabase";
 import type { Recipe, CookLog } from "./types";
+
 interface RecipeStore {
   recipes: Recipe[];
   cookLogs: CookLog[];
-  addRecipe: (recipe: Recipe) => void;
-  updateRecipe: (id: string, recipe: Partial<Recipe>) => void;
-  deleteRecipe: (id: string) => void;
-  logCook: (recipeId: string, notes?: string) => void;
+  loading: boolean;
+  fetchRecipes: () => Promise<void>;
+  addRecipe: (recipe: Recipe) => Promise<void>;
+  updateRecipe: (id: string, recipe: Partial<Recipe>) => Promise<void>;
+  deleteRecipe: (id: string) => Promise<void>;
+  logCook: (recipeId: string, notes?: string) => Promise<void>;
   getRecommendations: () => Recipe[];
 }
 
-export const useRecipeStore = create<RecipeStore>()(
-  persist(
-    (set, get) => ({
-      recipes: [],
-      cookLogs: [],
+export const useRecipeStore = create<RecipeStore>((set, get) => ({
+  recipes: [],
+  cookLogs: [],
+  loading: false,
 
-      addRecipe: (recipe) =>
-        set((s) => ({ recipes: [...s.recipes, recipe] })),
+  fetchRecipes: async () => {
+    set({ loading: true });
+    const { data: recipes } = await supabase
+      .from("recipes")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-      updateRecipe: (id, updates) =>
-        set((s) => ({
-          recipes: s.recipes.map((r) => (r.id === id ? { ...r, ...updates } : r)),
-        })),
+    const { data: cookLogs } = await supabase
+      .from("cook_logs")
+      .select("*")
+      .order("cooked_at", { ascending: false });
 
-      deleteRecipe: (id) =>
-        set((s) => ({ recipes: s.recipes.filter((r) => r.id !== id) })),
+    set({
+      recipes: (recipes ?? []).map(dbToRecipe),
+      cookLogs: (cookLogs ?? []).map((l: DbCookLog) => ({
+        recipeId: l.recipe_id,
+        cookedAt: l.cooked_at,
+        notes: l.notes,
+      })),
+      loading: false,
+    });
+  },
 
-      logCook: (recipeId, notes) => {
-        const log: CookLog = { recipeId, cookedAt: new Date().toISOString(), notes };
-        set((s) => ({
-          cookLogs: [...s.cookLogs, log],
-          recipes: s.recipes.map((r) =>
-            r.id === recipeId ? { ...r, cooked: r.cooked + 1 } : r
-          ),
-        }));
-      },
+  addRecipe: async (recipe) => {
+    const { data, error } = await supabase
+      .from("recipes")
+      .insert(recipeToDb(recipe))
+      .select()
+      .single();
+    if (!error && data) {
+      set((s) => ({ recipes: [dbToRecipe(data), ...s.recipes] }));
+    }
+  },
 
-      getRecommendations: () => {
-        const { recipes, cookLogs } = get();
-        if (cookLogs.length === 0) return recipes.slice(0, 3);
+  updateRecipe: async (id, updates) => {
+    const current = get().recipes.find((r) => r.id === id);
+    if (!current) return;
+    const merged = { ...current, ...updates };
+    const { error } = await supabase
+      .from("recipes")
+      .update(recipeToDb(merged))
+      .eq("id", id);
+    if (!error) {
+      set((s) => ({
+        recipes: s.recipes.map((r) => (r.id === id ? merged : r)),
+      }));
+    }
+  },
 
-        // Tally tag frequencies from cook history
-        const tagCount: Record<string, number> = {};
-        const cuisineCount: Record<string, number> = {};
-        for (const log of cookLogs) {
-          const recipe = recipes.find((r) => r.id === log.recipeId);
-          if (!recipe) continue;
-          for (const tag of recipe.tags) tagCount[tag] = (tagCount[tag] ?? 0) + 1;
-          cuisineCount[recipe.cuisine] = (cuisineCount[recipe.cuisine] ?? 0) + 1;
-        }
+  deleteRecipe: async (id) => {
+    const { error } = await supabase.from("recipes").delete().eq("id", id);
+    if (!error) {
+      set((s) => ({ recipes: s.recipes.filter((r) => r.id !== id) }));
+    }
+  },
 
-        // Score each recipe
-        const recentIds = cookLogs.slice(-5).map((l) => l.recipeId);
-        return recipes
-          .filter((r) => !recentIds.includes(r.id))
-          .map((r) => {
-            let score = 0;
-            for (const tag of r.tags) score += tagCount[tag] ?? 0;
-            score += (cuisineCount[r.cuisine] ?? 0) * 2;
-            return { recipe: r, score };
-          })
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 4)
-          .map((x) => x.recipe);
-      },
-    }),
-    { name: "mise-recipes-v2" }
-  )
-);
+  logCook: async (recipeId, notes) => {
+    const { error } = await supabase
+      .from("cook_logs")
+      .insert({ recipe_id: recipeId, notes });
+
+    if (!error) {
+      const newCooked = (get().recipes.find((r) => r.id === recipeId)?.cooked ?? 0) + 1;
+      await supabase.from("recipes").update({ cooked: newCooked }).eq("id", recipeId);
+
+      const log: CookLog = { recipeId, cookedAt: new Date().toISOString(), notes };
+      set((s) => ({
+        cookLogs: [log, ...s.cookLogs],
+        recipes: s.recipes.map((r) =>
+          r.id === recipeId ? { ...r, cooked: r.cooked + 1 } : r
+        ),
+      }));
+    }
+  },
+
+  getRecommendations: () => {
+    const { recipes, cookLogs } = get();
+    if (cookLogs.length === 0) return recipes.slice(0, 3);
+
+    const tagCount: Record<string, number> = {};
+    const cuisineCount: Record<string, number> = {};
+    for (const log of cookLogs) {
+      const recipe = recipes.find((r) => r.id === log.recipeId);
+      if (!recipe) continue;
+      for (const tag of recipe.tags) tagCount[tag] = (tagCount[tag] ?? 0) + 1;
+      cuisineCount[recipe.cuisine] = (cuisineCount[recipe.cuisine] ?? 0) + 1;
+    }
+
+    const recentIds = cookLogs.slice(0, 5).map((l) => l.recipeId);
+    return recipes
+      .filter((r) => !recentIds.includes(r.id))
+      .map((r) => {
+        let score = 0;
+        for (const tag of r.tags) score += tagCount[tag] ?? 0;
+        score += (cuisineCount[r.cuisine] ?? 0) * 2;
+        return { recipe: r, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 4)
+      .map((x) => x.recipe);
+  },
+}));
+
+// DB row types
+interface DbRecipe {
+  id: string;
+  title: string;
+  description: string;
+  cuisine: string;
+  tags: string[];
+  ingredients: { amount: string; unit: string; name: string }[];
+  steps: string[];
+  prep_time: number;
+  cook_time: number;
+  servings: number;
+  created_at: string;
+  cooked: number;
+}
+
+interface DbCookLog {
+  recipe_id: string;
+  cooked_at: string;
+  notes?: string;
+}
+
+function dbToRecipe(row: DbRecipe): Recipe {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    cuisine: row.cuisine,
+    tags: row.tags ?? [],
+    ingredients: row.ingredients ?? [],
+    steps: row.steps ?? [],
+    prepTime: row.prep_time,
+    cookTime: row.cook_time,
+    servings: row.servings,
+    createdAt: row.created_at,
+    cooked: row.cooked ?? 0,
+  };
+}
+
+function recipeToDb(r: Recipe) {
+  return {
+    id: r.id,
+    title: r.title,
+    description: r.description,
+    cuisine: r.cuisine,
+    tags: r.tags,
+    ingredients: r.ingredients,
+    steps: r.steps,
+    prep_time: r.prepTime,
+    cook_time: r.cookTime,
+    servings: r.servings,
+    created_at: r.createdAt,
+    cooked: r.cooked,
+  };
+}

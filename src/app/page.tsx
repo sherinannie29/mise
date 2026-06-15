@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useRecipeStore } from "@/lib/store";
 import { RecipeCard } from "@/components/RecipeCard";
 
 export default function Home() {
   const recipes = useRecipeStore((s) => s.recipes);
+  const loading = useRecipeStore((s) => s.loading);
+  const fetchRecipes = useRecipeStore((s) => s.fetchRecipes);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+
+  useEffect(() => { fetchRecipes(); }, []);
 
   const cuisines = ["all", ...Array.from(new Set(recipes.map((r) => r.cuisine))).sort()];
 
@@ -27,7 +31,7 @@ export default function Home() {
       {/* Hero banner */}
       <div className="w-full h-72 sm:h-96 overflow-hidden relative">
         <img
-          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80"
+          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&w=1600&q=80"
           alt=""
           className="w-full h-full object-cover"
         />
@@ -72,10 +76,12 @@ export default function Home() {
         ))}
       </div>
 
-      {filtered.length === 0 ? (
+      {loading ? (
+        <p className="text-[#9ca3af] text-sm">Loading…</p>
+      ) : filtered.length === 0 ? (
         <p className="text-[#9ca3af] text-sm">
-        {query || filter !== "all" ? "No recipes match your search." : "No recipes yet — tap + Add to save your first one."}
-      </p>
+          {query || filter !== "all" ? "No recipes match your search." : "No recipes yet — tap + Add to save your first one."}
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((r) => (

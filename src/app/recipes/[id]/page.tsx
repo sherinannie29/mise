@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRecipeStore } from "@/lib/store";
 import { Clock, Users, ChevronLeft, Trash2, CheckCircle2 } from "lucide-react";
@@ -11,6 +11,9 @@ export default function RecipePage({ params }: { params: Promise<{ id: string }>
   const recipe = useRecipeStore((s) => s.recipes.find((r) => r.id === id));
   const deleteRecipe = useRecipeStore((s) => s.deleteRecipe);
   const logCook = useRecipeStore((s) => s.logCook);
+  const fetchRecipes = useRecipeStore((s) => s.fetchRecipes);
+
+  useEffect(() => { if (!recipe) fetchRecipes(); }, []);
 
   if (!recipe) return (
     <div className="max-w-2xl mx-auto px-6 py-20 text-center text-[#9ca3af]">
