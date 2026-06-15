@@ -1,65 +1,89 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { Search } from "lucide-react";
+import { useRecipeStore } from "@/lib/store";
+import { RecipeCard } from "@/components/RecipeCard";
 
 export default function Home() {
+  const recipes = useRecipeStore((s) => s.recipes);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const cuisines = ["all", ...Array.from(new Set(recipes.map((r) => r.cuisine))).sort()];
+
+  const filtered = recipes.filter((r) => {
+    const matchesQuery =
+      !query ||
+      r.title.toLowerCase().includes(query.toLowerCase()) ||
+      r.tags.some((t) => t.includes(query.toLowerCase())) ||
+      r.cuisine.toLowerCase().includes(query.toLowerCase());
+    const matchesCuisine = filter === "all" || r.cuisine === filter;
+    return matchesQuery && matchesCuisine;
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div>
+      {/* Hero banner */}
+      <div className="w-full h-72 sm:h-96 overflow-hidden relative">
+        <img
+          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80"
+          alt=""
+          className="w-full h-full object-cover"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="absolute inset-0 bg-black/10" />
+      </div>
+
+    <div className="max-w-5xl mx-auto px-6 py-10">
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d] mb-1">
+          Your recipes
+        </h1>
+        <p className="text-[#6b7280] text-sm">{recipes.length} recipes saved</p>
+      </div>
+
+      <div className="relative mb-4">
+        <Search
+          size={16}
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9ca3af]"
+        />
+        <input
+          type="text"
+          placeholder="Search recipes, cuisines, tags…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full pl-9 pr-4 py-2.5 text-sm border border-[#e5e7eb] rounded-xl bg-[#fdf8f0] focus:outline-none focus:border-[#2d6a4f] transition-colors"
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-8">
+        {cuisines.map((c) => (
+          <button
+            key={c}
+            onClick={() => setFilter(c)}
+            className={`px-3 py-1 text-sm rounded-full border transition-colors ${
+              filter === c
+                ? "border-[#2d6a4f] bg-[#2d6a4f] text-white"
+                : "border-[#e5e7eb] text-[#6b7280] hover:border-[#2d6a4f] hover:text-[#2d6a4f]"
+            }`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {c === "all" ? "All" : c}
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <p className="text-[#9ca3af] text-sm">
+        {query || filter !== "all" ? "No recipes match your search." : "No recipes yet — tap + Add to save your first one."}
+      </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((r) => (
+            <RecipeCard key={r.id} recipe={r} />
+          ))}
         </div>
-      </main>
+      )}
+    </div>
     </div>
   );
 }
