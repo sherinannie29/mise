@@ -18,10 +18,27 @@ export interface Recipe {
   imageUrl?: string;
   createdAt: string;
   cooked: number; // times cooked
+  isPrivate?: boolean;
 }
 
 export interface CookLog {
   recipeId: string;
   cookedAt: string;
   notes?: string;
+}
+
+export interface Profile {
+  id: string;
+  email: string;
+  fullName: string | null;
+  avatarUrl: string | null;
+}
+
+export interface Friendship {
+  id: string;
+  requesterId: string;
+  receiverId: string;
+  status: "pending" | "accepted";
+  createdAt: string;
+  profile?: Profile;
 }

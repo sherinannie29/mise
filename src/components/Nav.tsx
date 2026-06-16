@@ -14,11 +14,13 @@ export function Nav() {
   const links = [
     { href: "/", label: "Recipes" },
     { href: "/recommendations", label: "For You" },
+    { href: "/friends", label: "Friends" },
+    { href: "/grocery", label: "Grocery" },
     { href: "/add", label: "+ Add" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#f5f0e8] border-b border-[#e5e7eb]">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-[#e5e7eb]/50" style={{ background: "rgba(245, 240, 232, 0.3)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center">
           <MiseLogo size="sm" />
@@ -39,7 +41,7 @@ export function Nav() {
           ))}
 
           {user && (
-            <div className="flex items-center gap-2 ml-2 pl-3 border-l border-[#e5e7eb]">
+            <div className="flex items-center gap-4 ml-2 pl-3 border-l border-[#e5e7eb]">
               <div className="w-7 h-7 rounded-full bg-[#2d6a4f] text-white text-xs flex items-center justify-center font-medium">
                 {(user.user_metadata?.full_name ?? user.email ?? "U")[0].toUpperCase()}
               </div>

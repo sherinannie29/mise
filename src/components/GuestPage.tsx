@@ -1,36 +1,50 @@
 "use client";
 
 import { useAuthStore } from "@/lib/auth";
-import { MiseLogo } from "./MiseLogo";
 
 export function GuestPage() {
   const signInWithGoogle = useAuthStore((s) => s.signInWithGoogle);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Hero */}
-      <div className="relative w-full h-[60vh] overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&w=1600&q=80"
-          alt=""
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6">
-          <MiseLogo white />
-          <p className="mt-4 text-lg text-white/80 font-light">Your personal recipe collection</p>
-        </div>
-      </div>
+    <div className="relative min-h-screen overflow-hidden">
+      <img
+        src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&w=1600&q=80"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-black/60" />
 
-      {/* Sign in */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
-        <h2 className="text-2xl font-semibold text-[#0d0d0d] mb-2">Get started</h2>
-        <p className="text-[#6b7280] text-sm mb-8 text-center max-w-xs">
-          Save your favourite recipes and get personalised recommendations based on what you cook.
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-8">
+        <div style={{ marginBottom: "2rem" }}>
+          <span style={{
+            fontFamily: "Georgia, serif",
+            fontWeight: 700,
+            fontSize: "4.5rem",
+            color: "rgba(255,255,255,0.95)",
+            letterSpacing: "-0.02em",
+            lineHeight: 1,
+          }}>mise</span>
+        </div>
+
+        <h1 style={{
+          fontFamily: "Georgia, serif",
+          fontWeight: 700,
+          fontSize: "clamp(1.6rem, 3.5vw, 2.5rem)",
+          color: "rgba(255,255,255,0.45)",
+          lineHeight: 1.15,
+          letterSpacing: "-0.02em",
+          marginBottom: "1.5rem",
+        }}>
+          Your recipes,<br />all in one place.
+        </h1>
+
+        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "1rem", marginBottom: "2.5rem", maxWidth: "420px", lineHeight: 1.6 }}>
+          Save the dishes you love and get personalised recommendations based on what you cook.
         </p>
+
         <button
           onClick={signInWithGoogle}
-          className="flex items-center gap-3 px-6 py-3 bg-white border border-[#e5e7eb] rounded-xl shadow-sm hover:shadow-md transition-all text-sm font-medium text-[#0d0d0d]"
+          className="flex items-center gap-3 px-6 py-3.5 bg-white/15 border border-white/30 backdrop-blur-sm rounded-xl text-sm font-medium text-white hover:bg-white/25 transition-colors"
         >
           <GoogleIcon />
           Continue with Google

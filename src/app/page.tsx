@@ -31,9 +31,9 @@ export default function Home() {
       {/* Hero banner */}
       <div className="w-full h-72 sm:h-96 overflow-hidden relative">
         <img
-          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&w=1600&q=80"
+          src="https://images.unsplash.com/photo-1767114915974-3481fa23cbb0?q=80&w=2242&auto=format&fit=crop"
           alt=""
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/10" />
       </div>

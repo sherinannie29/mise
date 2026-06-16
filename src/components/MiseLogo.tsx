@@ -2,7 +2,7 @@
 
 export function MiseLogo({ white = false, size = "md" }: { white?: boolean; size?: "sm" | "md" | "lg" }) {
   const color = white ? "#ffffff" : "#0d0d0d";
-  const fontSize = size === "sm" ? "22px" : size === "lg" ? "52px" : "36px";
+  const fontSize = size === "sm" ? "38px" : size === "lg" ? "52px" : "36px";
   const leafSize = size === "sm" ? 7 : size === "lg" ? 14 : 10;
 
   return (

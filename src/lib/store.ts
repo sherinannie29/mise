@@ -139,6 +139,7 @@ interface DbRecipe {
   servings: number;
   created_at: string;
   cooked: number;
+  is_private: boolean;
 }
 
 interface DbCookLog {
@@ -161,6 +162,7 @@ function dbToRecipe(row: DbRecipe): Recipe {
     servings: row.servings,
     createdAt: row.created_at,
     cooked: row.cooked ?? 0,
+    isPrivate: row.is_private ?? false,
   };
 }
 
@@ -178,5 +180,6 @@ function recipeToDb(r: Recipe) {
     servings: r.servings,
     created_at: r.createdAt,
     cooked: r.cooked,
+    is_private: r.isPrivate ?? false,
   };
 }

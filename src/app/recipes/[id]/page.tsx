@@ -3,13 +3,14 @@
 import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRecipeStore } from "@/lib/store";
-import { Clock, Users, ChevronLeft, Trash2, CheckCircle2 } from "lucide-react";
+import { Clock, Users, ChevronLeft, Trash2, CheckCircle2, Lock, Unlock } from "lucide-react";
 
 export default function RecipePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const recipe = useRecipeStore((s) => s.recipes.find((r) => r.id === id));
   const deleteRecipe = useRecipeStore((s) => s.deleteRecipe);
+  const updateRecipe = useRecipeStore((s) => s.updateRecipe);
   const logCook = useRecipeStore((s) => s.logCook);
   const fetchRecipes = useRecipeStore((s) => s.fetchRecipes);
 
@@ -47,12 +48,21 @@ export default function RecipePage({ params }: { params: Promise<{ id: string }>
           <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d]">
             {recipe.title}
           </h1>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => updateRecipe(id, { isPrivate: !recipe.isPrivate })}
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-colors ${recipe.isPrivate ? "border-[#2d6a4f] text-[#2d6a4f] bg-[#d8f3dc]" : "border-[#e5e7eb] text-[#9ca3af] hover:border-[#2d6a4f] hover:text-[#2d6a4f]"}`}
+            >
+              {recipe.isPrivate ? <Lock size={12} /> : <Unlock size={12} />}
+              {recipe.isPrivate ? "Private" : "Public"}
+            </button>
           <button
             onClick={handleDelete}
             className="shrink-0 p-2 text-[#9ca3af] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
           >
             <Trash2 size={16} />
           </button>
+          </div>
         </div>
         <p className="text-[#6b7280] text-sm leading-relaxed">{recipe.description}</p>
       </div>

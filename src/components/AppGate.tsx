@@ -22,7 +22,7 @@ export function AppGate({ children, nav }: { children: React.ReactNode; nav: Rea
   return (
     <>
       {nav}
-      <main className="min-h-screen">{children}</main>
+      <main className="min-h-screen pt-16">{children}</main>
     </>
   );
 }
