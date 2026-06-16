@@ -30,10 +30,15 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
 
     const { data } = await supabase
       .from("friendships")
-      .select("*, requester:profiles!friendships_requester_id_fkey(id,email,full_name,avatar_url), receiver:profiles!friendships_receiver_id_fkey(id,email,full_name,avatar_url)")
+      .select("*")
       .or(`requester_id.eq.${user.id},receiver_id.eq.${user.id}`);
 
     if (!data) { set({ loading: false }); return; }
+
+    // Fetch all other user profiles in one query
+    const otherIds = data.map((row: any) => row.requester_id === user.id ? row.receiver_id : row.requester_id);
+    const { data: profiles } = await supabase.from("profiles").select("id, email, full_name, avatar_url").in("id", otherIds);
+    const profileMap = Object.fromEntries((profiles ?? []).map((p: any) => [p.id, p]));
 
     const friends: Friendship[] = [];
     const pending: Friendship[] = [];
@@ -41,7 +46,8 @@ export const useFriendsStore = create<FriendsStore>((set, get) => ({
 
     for (const row of data) {
       const isRequester = row.requester_id === user.id;
-      const otherProfile = isRequester ? row.receiver : row.requester;
+      const otherId = isRequester ? row.receiver_id : row.requester_id;
+      const otherProfile = profileMap[otherId];
       const friendship: Friendship = {
         id: row.id,
         requesterId: row.requester_id,
