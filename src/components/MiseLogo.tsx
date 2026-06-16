@@ -8,7 +8,7 @@ export function MiseLogo({ white = false, size = "md" }: { white?: boolean; size
   return (
     <div style={{ display: "inline-flex", alignItems: "flex-start", position: "relative" }}>
       <span style={{ fontFamily: "Georgia, serif", fontWeight: 700, fontSize, color, lineHeight: 1, letterSpacing: "-0.02em" }}>
-        mis
+        m
       </span>
       <span style={{ position: "relative", fontFamily: "Georgia, serif", fontWeight: 700, fontSize, color, lineHeight: 1, letterSpacing: "-0.02em" }}>
         <span style={{
@@ -21,7 +21,10 @@ export function MiseLogo({ white = false, size = "md" }: { white?: boolean; size
           background: "#40916c",
           borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
         }} />
-        e
+        i
+      </span>
+      <span style={{ fontFamily: "Georgia, serif", fontWeight: 700, fontSize, color, lineHeight: 1, letterSpacing: "-0.02em" }}>
+        se
       </span>
     </div>
   );
