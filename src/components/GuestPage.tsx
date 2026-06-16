@@ -8,7 +8,7 @@ export function GuestPage() {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <img
-        src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&w=1600&q=80"
+        src="https://images.unsplash.com/photo-1767114915974-3481fa23cbb0?q=80&w=2242&auto=format&fit=crop"
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
       />
