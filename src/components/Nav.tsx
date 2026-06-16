@@ -2,65 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-function MiseLogo() {
-  return (
-    <svg width="90" height="60" viewBox="0 0 72 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* "mise" text path using a display serif style */}
-      {/* m */}
-      <text
-        x="2"
-        y="30"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="28"
-        fontWeight="700"
-        fill="#0d0d0d"
-        letterSpacing="-0.5"
-      >
-        m
-      </text>
-      {/* i — no dot, we'll add leaf */}
-      <text
-        x="28"
-        y="30"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="28"
-        fontWeight="700"
-        fill="#0d0d0d"
-      >
-        i
-      </text>
-      {/* leaf replacing the dot of i */}
-      <ellipse cx="31.5" cy="6" rx="3.5" ry="5" fill="#40916c" transform="rotate(-20 31.5 6)" />
-      <ellipse cx="31.5" cy="6" rx="1" ry="4" fill="#2d6a4f" transform="rotate(-20 31.5 6)" />
-      {/* s */}
-      <text
-        x="37"
-        y="30"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="28"
-        fontWeight="700"
-        fill="#0d0d0d"
-      >
-        s
-      </text>
-      {/* e */}
-      <text
-        x="51"
-        y="30"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="28"
-        fontWeight="700"
-        fill="#0d0d0d"
-      >
-        e
-      </text>
-    </svg>
-  );
-}
+import { MiseLogo } from "./MiseLogo";
+import { useAuthStore } from "@/lib/auth";
+import { LogOut } from "lucide-react";
 
 export function Nav() {
   const path = usePathname();
+  const user = useAuthStore((s) => s.user);
+  const signOut = useAuthStore((s) => s.signOut);
 
   const links = [
     { href: "/", label: "Recipes" },
@@ -88,6 +37,29 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+
+          {user && (
+            <div className="flex items-center gap-2 ml-2 pl-3 border-l border-[#e5e7eb]">
+              {user.user_metadata?.avatar_url ? (
+                <img
+                  src={user.user_metadata.avatar_url}
+                  alt=""
+                  className="w-7 h-7 rounded-full"
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-[#2d6a4f] text-white text-xs flex items-center justify-center font-medium">
+                  {user.email?.[0].toUpperCase()}
+                </div>
+              )}
+              <button
+                onClick={signOut}
+                className="p-1.5 text-[#9ca3af] hover:text-[#0d0d0d] transition-colors"
+                title="Sign out"
+              >
+                <LogOut size={15} />
+              </button>
+            </div>
+          )}
         </nav>
       </div>
     </header>

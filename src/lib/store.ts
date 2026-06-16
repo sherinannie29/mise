@@ -21,9 +21,11 @@ export const useRecipeStore = create<RecipeStore>((set, get) => ({
 
   fetchRecipes: async () => {
     set({ loading: true });
+    const { data: { user } } = await supabase.auth.getUser();
     const { data: recipes } = await supabase
       .from("recipes")
       .select("*")
+      .eq("user_id", user?.id)
       .order("created_at", { ascending: false });
 
     const { data: cookLogs } = await supabase
@@ -43,9 +45,10 @@ export const useRecipeStore = create<RecipeStore>((set, get) => ({
   },
 
   addRecipe: async (recipe) => {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from("recipes")
-      .insert(recipeToDb(recipe))
+      .insert({ ...recipeToDb(recipe), user_id: user?.id })
       .select()
       .single();
     if (!error && data) {
