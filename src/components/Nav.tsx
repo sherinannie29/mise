@@ -21,7 +21,7 @@ export function Nav() {
     <header className="sticky top-0 z-50 bg-[#f5f0e8] border-b border-[#e5e7eb]">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center">
-          <MiseLogo />
+          <MiseLogo size="sm" />
         </Link>
         <nav className="flex items-center gap-1">
           {links.map((l) => (
