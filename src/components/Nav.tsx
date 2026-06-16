@@ -40,17 +40,9 @@ export function Nav() {
 
           {user && (
             <div className="flex items-center gap-2 ml-2 pl-3 border-l border-[#e5e7eb]">
-              {user.user_metadata?.avatar_url ? (
-                <img
-                  src={user.user_metadata.avatar_url}
-                  alt=""
-                  className="w-7 h-7 rounded-full"
-                />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-[#2d6a4f] text-white text-xs flex items-center justify-center font-medium">
-                  {user.email?.[0].toUpperCase()}
-                </div>
-              )}
+              <div className="w-7 h-7 rounded-full bg-[#2d6a4f] text-white text-xs flex items-center justify-center font-medium">
+                {(user.user_metadata?.full_name ?? user.email ?? "U")[0].toUpperCase()}
+              </div>
               <button
                 onClick={signOut}
                 className="p-1.5 text-[#9ca3af] hover:text-[#0d0d0d] transition-colors"
