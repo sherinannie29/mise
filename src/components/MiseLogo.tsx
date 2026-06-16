@@ -1,27 +1,50 @@
-export function MiseLogo({ white = false, size = "md" }: { white?: boolean; size?: "sm" | "md" | "lg" }) {
-  const fill = white ? "#ffffff" : "#0d0d0d";
+"use client";
 
-  if (size === "sm") {
-    return (
-      <svg width="90" height="44" viewBox="0 0 90 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="2" y="34" fontFamily="Georgia, 'Times New Roman', serif" fontSize="32" fontWeight="700" fill={fill} letterSpacing="-0.5">m</text>
-        <text x="34" y="34" fontFamily="Georgia, 'Times New Roman', serif" fontSize="32" fontWeight="700" fill={fill}>i</text>
-        <ellipse cx="38" cy="6" rx="3.5" ry="5" fill="#40916c" transform="rotate(-20 38 6)" />
-        <ellipse cx="38" cy="6" rx="1" ry="4" fill="#2d6a4f" transform="rotate(-20 38 6)" />
-        <text x="44" y="34" fontFamily="Georgia, 'Times New Roman', serif" fontSize="32" fontWeight="700" fill={fill}>s</text>
-        <text x="61" y="34" fontFamily="Georgia, 'Times New Roman', serif" fontSize="32" fontWeight="700" fill={fill}>e</text>
-      </svg>
-    );
-  }
+export function MiseLogo({ white = false, size = "md" }: { white?: boolean; size?: "sm" | "md" | "lg" }) {
+  const color = white ? "#ffffff" : "#0d0d0d";
+  const fontSize = size === "sm" ? "1.6rem" : size === "lg" ? "3.5rem" : "2.5rem";
+  const leafSize = size === "sm" ? 8 : size === "lg" ? 16 : 12;
 
   return (
-    <svg width="140" height="80" viewBox="0 0 110 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="2" y="46" fontFamily="Georgia, 'Times New Roman', serif" fontSize="48" fontWeight="700" fill={fill} letterSpacing="-0.5">m</text>
-      <text x="48" y="46" fontFamily="Georgia, 'Times New Roman', serif" fontSize="48" fontWeight="700" fill={fill}>i</text>
-      <ellipse cx="53" cy="8" rx="5" ry="7" fill="#40916c" transform="rotate(-20 53 8)" />
-      <ellipse cx="53" cy="8" rx="1.5" ry="5.5" fill="#2d6a4f" transform="rotate(-20 53 8)" />
-      <text x="62" y="46" fontFamily="Georgia, 'Times New Roman', serif" fontSize="48" fontWeight="700" fill={fill}>s</text>
-      <text x="84" y="46" fontFamily="Georgia, 'Times New Roman', serif" fontSize="48" fontWeight="700" fill={fill}>e</text>
-    </svg>
+    <div style={{ display: "flex", alignItems: "flex-start", position: "relative", lineHeight: 1 }}>
+      <span style={{
+        fontFamily: "Georgia, 'Times New Roman', serif",
+        fontWeight: 700,
+        fontSize,
+        color,
+        letterSpacing: "-0.02em",
+        lineHeight: 1,
+      }}>
+        m
+      </span>
+      <span style={{ position: "relative" }}>
+        {/* leaf above the i */}
+        <svg
+          width={leafSize}
+          height={leafSize * 1.4}
+          viewBox="0 0 10 14"
+          style={{ position: "absolute", top: 2, left: "50%", transform: "translateX(-50%) rotate(-20deg)" }}
+        >
+          <ellipse cx="5" cy="7" rx="4.5" ry="6.5" fill="#40916c" />
+          <ellipse cx="5" cy="7" rx="1.2" ry="5.5" fill="#2d6a4f" />
+        </svg>
+        <span style={{
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          fontWeight: 700,
+          fontSize,
+          color,
+          letterSpacing: "-0.02em",
+          lineHeight: 1,
+        }}>i</span>
+      </span>
+      <span style={{
+        fontFamily: "Georgia, 'Times New Roman', serif",
+        fontWeight: 700,
+        fontSize,
+        color,
+        letterSpacing: "-0.02em",
+        lineHeight: 1,
+      }}>se</span>
+    </div>
   );
 }
