@@ -18,7 +18,6 @@ export function Nav() {
     { href: "/recommendations", label: "For You" },
     { href: "/friends", label: "Friends" },
     { href: "/grocery", label: "Grocery" },
-    { href: "/add", label: "+ Add" },
   ];
 
   return (

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, Plus } from "lucide-react";
+import Link from "next/link";
 import { useRecipeStore } from "@/lib/store";
 import { RecipeCard } from "@/components/RecipeCard";
 
@@ -39,11 +40,20 @@ export default function Home() {
       </div>
 
     <div className="max-w-5xl mx-auto px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d] mb-1">
-          Your recipes
-        </h1>
-        <p className="text-[#6b7280] text-sm">{recipes.length} recipes saved</p>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d] mb-1">
+            Your recipes
+          </h1>
+          <p className="text-[#6b7280] text-sm">{recipes.length} recipes saved</p>
+        </div>
+        <Link
+          href="/add"
+          className="flex items-center gap-1.5 px-4 py-2 bg-[#2d6a4f] text-white text-sm rounded-xl hover:bg-[#1b4332] transition-colors"
+        >
+          <Plus size={15} />
+          Add recipe
+        </Link>
       </div>
 
       <div className="relative mb-4">
