@@ -13,14 +13,13 @@ export function MiseLogo({ white = false, size = "md" }: { white?: boolean; size
       <span style={{ position: "relative", fontFamily: "Georgia, serif", fontWeight: 700, fontSize, color, lineHeight: 1, letterSpacing: "-0.02em" }}>
         <span style={{
           position: "absolute",
-          top: "-2px",
+          top: "-4px",
           left: "50%",
-          transform: "translateX(-50%)",
+          transform: "translateX(-50%) rotate(-20deg)",
           width: leafSize,
           height: leafSize * 1.4,
           background: "#40916c",
           borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
-          rotate: "-20deg",
         }} />
         e
       </span>
