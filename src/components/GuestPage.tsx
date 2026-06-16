@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuthStore } from "@/lib/auth";
+import { MiseLogo } from "./MiseLogo";
 
 export function GuestPage() {
   const signInWithGoogle = useAuthStore((s) => s.signInWithGoogle);
@@ -16,14 +17,7 @@ export function GuestPage() {
 
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-8">
         <div style={{ marginBottom: "2rem" }}>
-          <span style={{
-            fontFamily: "Georgia, serif",
-            fontWeight: 700,
-            fontSize: "4.5rem",
-            color: "rgba(255,255,255,0.95)",
-            letterSpacing: "-0.02em",
-            lineHeight: 1,
-          }}>mise</span>
+          <MiseLogo white size="lg" />
         </div>
 
         <h1 style={{
