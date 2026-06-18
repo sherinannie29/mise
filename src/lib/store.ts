@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { supabase } from "./supabase";
 import type { Recipe, CookLog } from "./types";
+import { refreshRecommendations } from "./recommendations";
 
 interface RecipeStore {
   recipes: Recipe[];
@@ -52,7 +53,42 @@ export const useRecipeStore = create<RecipeStore>((set, get) => ({
       .select()
       .single();
     if (!error && data) {
-      set((s) => ({ recipes: [dbToRecipe(data), ...s.recipes] }));
+      const newRecipe = dbToRecipe(data);
+      const updatedRecipes = [newRecipe, ...get().recipes];
+      set({ recipes: updatedRecipes });
+      // Fire and forget — both run in background
+      refreshRecommendations(updatedRecipes, newRecipe);
+      (async () => {
+        try {
+          const res = await fetch("/api/macros", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: newRecipe.title, ingredients: newRecipe.ingredients, servings: newRecipe.servings }),
+          });
+          const macros = await res.json();
+          if (macros.calories) {
+            await supabase.from("recipes").update({
+              calories: macros.calories,
+              protein_g: macros.protein_g,
+              carbs_g: macros.carbs_g,
+              fat_g: macros.fat_g,
+              fiber_g: macros.fiber_g,
+            }).eq("id", newRecipe.id);
+            set((s) => ({
+              recipes: s.recipes.map((r) => r.id === newRecipe.id ? {
+                ...r,
+                calories: macros.calories,
+                proteinG: macros.protein_g,
+                carbsG: macros.carbs_g,
+                fatG: macros.fat_g,
+                fiberG: macros.fiber_g,
+              } : r),
+            }));
+          }
+        } catch (e) {
+          console.error("Macro calculation failed:", e);
+        }
+      })();
     }
   },
 
@@ -140,6 +176,11 @@ interface DbRecipe {
   created_at: string;
   cooked: number;
   is_private: boolean;
+  calories?: number;
+  protein_g?: number;
+  carbs_g?: number;
+  fat_g?: number;
+  fiber_g?: number;
 }
 
 interface DbCookLog {
@@ -163,6 +204,11 @@ function dbToRecipe(row: DbRecipe): Recipe {
     createdAt: row.created_at,
     cooked: row.cooked ?? 0,
     isPrivate: row.is_private ?? false,
+    calories: row.calories,
+    proteinG: row.protein_g,
+    carbsG: row.carbs_g,
+    fatG: row.fat_g,
+    fiberG: row.fiber_g,
   };
 }
 
@@ -181,5 +227,10 @@ function recipeToDb(r: Recipe) {
     created_at: r.createdAt,
     cooked: r.cooked,
     is_private: r.isPrivate ?? false,
+    calories: r.calories,
+    protein_g: r.proteinG,
+    carbs_g: r.carbsG,
+    fat_g: r.fatG,
+    fiber_g: r.fiberG,
   };
 }

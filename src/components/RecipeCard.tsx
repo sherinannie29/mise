@@ -1,27 +1,33 @@
 "use client";
 
-import Link from "next/link";
 import { Clock, Users } from "lucide-react";
 import type { Recipe } from "@/lib/types";
 
-export function RecipeCard({ recipe }: { recipe: Recipe }) {
+export function RecipeCard({ recipe, onClick }: { recipe: Recipe; onClick: () => void }) {
   const totalTime = recipe.prepTime + recipe.cookTime;
 
   return (
-    <Link
-      href={`/recipes/${recipe.id}`}
-      className="group block border border-[#e5e7eb] rounded-2xl p-5 hover:border-[#2d6a4f] hover:shadow-sm transition-all bg-[#fdf8f0]"
+    <button
+      onClick={onClick}
+      className="group text-left w-full h-full rounded-2xl p-5 transition-all hover:scale-[1.01] flex flex-col"
+      style={{
+        background: "rgba(255, 255, 255, 0.65)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        border: "1px solid rgba(255, 255, 255, 0.6)",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+      }}
     >
       <div className="flex items-start justify-between gap-3 mb-3">
-        <h3 className="font-medium text-[#0d0d0d] text-base leading-snug group-hover:text-[#2d6a4f] transition-colors">
+        <h3 className="font-semibold text-[#111827] text-base leading-snug group-hover:text-[#2d6a4f] transition-colors" style={{ fontFamily: "Georgia, serif" }}>
           {recipe.title}
         </h3>
-        <span className="shrink-0 text-xs text-[#6b7280] bg-[#f3f4f6] px-2 py-0.5 rounded-full">
+        <span className="shrink-0 text-xs text-[#6b7280] bg-white/60 px-2 py-0.5 rounded-full">
           {recipe.cuisine}
         </span>
       </div>
-      <p className="text-sm text-[#6b7280] line-clamp-2 mb-4">{recipe.description}</p>
-      <div className="flex items-center gap-4 text-xs text-[#6b7280]">
+      <p className="text-sm text-[#374151] line-clamp-2 mb-4 flex-1">{recipe.description}</p>
+      <div className="flex items-center gap-4 text-xs text-[#4b5563]">
         <span className="flex items-center gap-1">
           <Clock size={12} />
           {totalTime} min
@@ -39,15 +45,12 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
       {recipe.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mt-3">
           {recipe.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="text-xs text-[#40916c] bg-[#d8f3dc] px-2 py-0.5 rounded-full"
-            >
+            <span key={tag} className="text-xs text-[#40916c] bg-[#d8f3dc]/70 px-2.5 py-0.5 rounded-full">
               {tag}
             </span>
           ))}
         </div>
       )}
-    </Link>
+    </button>
   );
 }

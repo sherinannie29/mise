@@ -92,17 +92,20 @@ export default function GroceryListPage() {
   const isOwner = list?.ownerId === user?.id;
 
   return (
+    <div className="min-h-screen relative">
+      <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80" alt="" className="fixed inset-0 w-full h-full object-cover -z-10" style={{ filter: "blur(18px) brightness(0.7) saturate(0.8)", transform: "scale(1.15)" }} />
+      <div className="fixed inset-0 -z-10" style={{ background: "rgba(5, 20, 10, 0.45)" }} />
     <div className="max-w-2xl mx-auto px-6 py-10">
       <button
         onClick={() => router.push("/grocery")}
-        className="flex items-center gap-1.5 text-sm text-[#6b7280] hover:text-[#0d0d0d] mb-6 transition-colors"
+        className="flex items-center gap-1.5 text-sm text-white font-medium hover:text-white/80 mb-6 transition-colors"
       >
         <ArrowLeft size={15} />
         Back to lists
       </button>
 
       <div className="flex items-start justify-between mb-6">
-        <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d]">
+        <h1 className="text-3xl font-semibold tracking-tight text-white">
           {list?.name ?? "Grocery list"}
         </h1>
         {isOwner && (
@@ -134,7 +137,7 @@ export default function GroceryListPage() {
 
       {showCollabInput && (
         <form onSubmit={handleAddCollab} className="mb-6 p-4 border border-[#e5e7eb] rounded-2xl bg-white">
-          <p className="text-sm font-medium text-[#0d0d0d] mb-3">Add a collaborator</p>
+          <p className="text-sm font-medium text-white mb-3">Add a collaborator</p>
           <div className="flex gap-2">
             <input
               autoFocus
@@ -196,7 +199,7 @@ export default function GroceryListPage() {
           )}
           {checked.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-[#9ca3af] uppercase tracking-wider mb-2">Done ({checked.length})</p>
+              <p className="text-xs font-medium text-white/60 uppercase tracking-wider mb-2">Done ({checked.length})</p>
               <div className="flex flex-col gap-1">
                 {checked.map((item) => (
                   <ItemRow key={item.id} item={item} onToggle={handleToggle} onDelete={handleDeleteItem} />
@@ -206,6 +209,7 @@ export default function GroceryListPage() {
           )}
         </>
       )}
+    </div>
     </div>
   );
 }
@@ -223,7 +227,7 @@ function ItemRow({ item, onToggle, onDelete }: { item: GroceryItem; onToggle: (i
           </svg>
         )}
       </button>
-      <span className={`flex-1 text-sm ${item.checked ? "line-through text-[#9ca3af]" : "text-[#0d0d0d]"}`}>
+      <span className={`flex-1 text-sm ${item.checked ? "line-through text-[#9ca3af]" : "text-white"}`}>
         {item.name}
       </span>
       <button

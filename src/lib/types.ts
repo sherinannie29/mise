@@ -19,6 +19,11 @@ export interface Recipe {
   createdAt: string;
   cooked: number; // times cooked
   isPrivate?: boolean;
+  calories?: number;
+  proteinG?: number;
+  carbsG?: number;
+  fatG?: number;
+  fiberG?: number;
 }
 
 export interface CookLog {

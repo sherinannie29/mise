@@ -14,15 +14,18 @@ export function Nav() {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { href: "/", label: "Recipes" },
+    { href: "/", label: "Home" },
+    { href: "/recipes", label: "Recipes" },
+    { href: "/nutrition", label: "Nutrition" },
+    { href: "/fitness", label: "Fitness" },
     { href: "/recommendations", label: "For You" },
-    { href: "/friends", label: "Friends" },
     { href: "/grocery", label: "Grocery" },
+    { href: "/friends", label: "Friends" },
   ];
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-[#e5e7eb]/50" style={{ background: "rgba(245, 240, 232, 0.3)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-[#e5e7eb]/50" style={{ background: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}>
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
             <MiseLogo size="sm" />

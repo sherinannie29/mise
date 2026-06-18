@@ -28,11 +28,14 @@ export default function GroceryPage() {
   };
 
   return (
+    <div className="min-h-screen relative">
+      <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80" alt="" className="fixed inset-0 w-full h-full object-cover -z-10" style={{ filter: "blur(18px) brightness(0.7) saturate(0.8)", transform: "scale(1.15)" }} />
+      <div className="fixed inset-0 -z-10" style={{ background: "rgba(5, 20, 10, 0.45)" }} />
     <div className="max-w-2xl mx-auto px-6 py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d]">Grocery lists</h1>
-          <p className="text-[#6b7280] text-sm mt-1">{lists.length} list{lists.length !== 1 ? "s" : ""}</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-white">Grocery lists</h1>
+          <p className="text-white/70 text-sm mt-1">{lists.length} list{lists.length !== 1 ? "s" : ""}</p>
         </div>
         <button
           onClick={() => setShowInput(true)}
@@ -83,7 +86,7 @@ export default function GroceryPage() {
             <div
               key={list.id}
               className="group relative rounded-2xl overflow-hidden"
-              style={{ backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", background: "rgba(255,255,255,0.35)", border: "1px solid rgba(255,255,255,0.5)", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}
+              style={{ backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", background: "rgba(255,255,255,0.80)", border: "1px solid rgba(255,255,255,0.7)", boxShadow: "0 4px 24px rgba(0,0,0,0.1)" }}
             >
               <Link href={`/grocery/${list.id}`} className="block px-6 pt-6 pb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ background: "rgba(45,106,79,0.12)" }}>
@@ -104,10 +107,10 @@ export default function GroceryPage() {
                       if (e.key === "Escape") { setEditingId(null); }
                     }}
                     onClick={(e) => e.preventDefault()}
-                    className="font-semibold text-[#0d0d0d] text-lg leading-tight bg-transparent border-b border-[#2d6a4f] focus:outline-none w-full"
+                    className="font-semibold text-[#111827] text-lg leading-tight bg-transparent border-b border-[#2d6a4f] focus:outline-none w-full"
                   />
                 ) : (
-                  <p className="font-semibold text-[#0d0d0d] text-lg leading-tight">{list.name}</p>
+                  <p className="font-semibold text-[#111827] text-lg leading-tight">{list.name}</p>
                 )}
                 {list.ownerId !== user?.id && (
                   <p className="text-xs text-[#6b7280] mt-1">Shared with you</p>
@@ -133,6 +136,7 @@ export default function GroceryPage() {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 }

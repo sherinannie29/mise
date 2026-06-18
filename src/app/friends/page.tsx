@@ -31,10 +31,13 @@ export default function FriendsPage() {
     (name ?? email)[0].toUpperCase();
 
   return (
+    <div className="min-h-screen relative">
+      <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80" alt="" className="fixed inset-0 w-full h-full object-cover -z-10" style={{ filter: "blur(18px) brightness(0.7) saturate(0.8)", transform: "scale(1.15)" }} />
+      <div className="fixed inset-0 -z-10" style={{ background: "rgba(5, 20, 10, 0.45)" }} />
     <div className="max-w-2xl mx-auto px-6 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d] mb-1">Friends</h1>
-        <p className="text-[#6b7280] text-sm">See what your friends are cooking.</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white mb-1">Friends</h1>
+        <p className="text-white/70 text-sm">See what your friends are cooking.</p>
       </div>
 
       {/* Add friend */}
@@ -80,7 +83,7 @@ export default function FriendsPage() {
                   {initials(f.profile?.fullName ?? null, f.profile?.email ?? "?")}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#0d0d0d] truncate">{f.profile?.fullName ?? f.profile?.email}</p>
+                  <p className="text-sm font-medium text-white truncate">{f.profile?.fullName ?? f.profile?.email}</p>
                   <p className="text-xs text-[#9ca3af] truncate">{f.profile?.email}</p>
                 </div>
                 <div className="flex gap-2">
@@ -117,7 +120,7 @@ export default function FriendsPage() {
                   {initials(f.profile?.fullName ?? null, f.profile?.email ?? "?")}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#0d0d0d] truncate">{f.profile?.fullName ?? f.profile?.email}</p>
+                  <p className="text-sm font-medium text-white truncate">{f.profile?.fullName ?? f.profile?.email}</p>
                   <p className="text-xs text-[#9ca3af] truncate">{f.profile?.email}</p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -140,6 +143,7 @@ export default function FriendsPage() {
           </div>
         )}
       </section>
+    </div>
     </div>
   );
 }

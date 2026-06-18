@@ -55,10 +55,13 @@ export default function AddRecipePage() {
   const labelClass = "block text-xs font-medium text-[#6b7280] uppercase tracking-wider mb-1.5";
 
   return (
+    <div className="min-h-screen relative">
+      <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80" alt="" className="fixed inset-0 w-full h-full object-cover -z-10" style={{ filter: "blur(18px) brightness(0.7) saturate(0.8)", transform: "scale(1.15)" }} />
+      <div className="fixed inset-0 -z-10" style={{ background: "rgba(5, 20, 10, 0.45)" }} />
     <div className="max-w-2xl mx-auto px-6 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-[#0d0d0d] mb-1">Add recipe</h1>
-        <p className="text-sm text-[#6b7280]">Save a new recipe to your collection.</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white mb-1">Add recipe</h1>
+        <p className="text-sm text-white/70">Save a new recipe to your collection.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -194,6 +197,7 @@ export default function AddRecipePage() {
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 }
