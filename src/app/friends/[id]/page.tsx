@@ -48,7 +48,7 @@ export default function FriendRecipesPage({ params }: { params: Promise<{ id: st
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {recipes.map((r) => (
-            <RecipeCard key={r.id} recipe={r} />
+            <RecipeCard key={r.id} recipe={r} onClick={() => {}} />
           ))}
         </div>
       )}
