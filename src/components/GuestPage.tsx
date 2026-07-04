@@ -39,7 +39,7 @@ export function GuestPage() {
       <img
         src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80"
         alt=""
-        className="absolute inset-0 w-full h-full object-cover"
+        className="fixed inset-0 w-full h-full object-cover"
         style={{ filter: "blur(18px) brightness(0.7) saturate(0.8)", transform: "scale(1.15)" }}
       />
       <div className="absolute inset-0" style={{ background: "rgba(5, 20, 10, 0.5)" }} />
@@ -50,7 +50,7 @@ export function GuestPage() {
           {/* Logo */}
           <div className="text-center mb-8">
             <MiseLogo white size="lg" />
-            <p className="text-white/50 text-sm mt-3">Your personal kitchen companion</p>
+            <p className="text-white/50 text-sm mt-3">Recipes, nutrition, fitness & more</p>
           </div>
 
           {/* Card */}
