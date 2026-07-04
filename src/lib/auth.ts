@@ -7,6 +7,8 @@ interface AuthStore {
   loading: boolean;
   init: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<{ error?: string }>;
+  signUpWithEmail: (email: string, password: string, fullName: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
 
@@ -30,6 +32,22 @@ export const useAuthStore = create<AuthStore>((set) => ({
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
+  },
+
+  signInWithEmail: async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { error: error.message };
+    return {};
+  },
+
+  signUpWithEmail: async (email, password, fullName) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName } },
+    });
+    if (error) return { error: error.message };
+    return {};
   },
 
   signOut: async () => {

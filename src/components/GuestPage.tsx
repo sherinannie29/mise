@@ -1,48 +1,142 @@
 "use client";
 
+import { useState } from "react";
 import { useAuthStore } from "@/lib/auth";
 import { MiseLogo } from "./MiseLogo";
 
 export function GuestPage() {
   const signInWithGoogle = useAuthStore((s) => s.signInWithGoogle);
+  const signInWithEmail = useAuthStore((s) => s.signInWithEmail);
+  const signUpWithEmail = useAuthStore((s) => s.signUpWithEmail);
+
+  const [mode, setMode] = useState<"landing" | "signin" | "signup">("landing");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    if (mode === "signin") {
+      const result = await signInWithEmail(email, password);
+      if (result.error) setError(result.error);
+    } else {
+      const result = await signUpWithEmail(email, password, fullName);
+      if (result.error) setError(result.error);
+      else setSuccess("Check your email for a confirmation link.");
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden">
       <img
-        src="https://images.unsplash.com/photo-1767114915974-3481fa23cbb0?q=80&w=2242&auto=format&fit=crop"
+        src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80"
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ filter: "blur(18px) brightness(0.7) saturate(0.8)", transform: "scale(1.15)" }}
       />
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0" style={{ background: "rgba(5, 20, 10, 0.5)" }} />
 
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-8">
-        <div style={{ marginBottom: "2rem" }}>
-          <MiseLogo white size="lg" />
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+        <div className="w-full max-w-sm">
+
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <MiseLogo white size="lg" />
+            <p className="text-white/50 text-sm mt-3">Your personal kitchen companion</p>
+          </div>
+
+          {/* Card */}
+          <div className="rounded-2xl p-7" style={{ background: "rgba(255,255,255,0.10)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.18)" }}>
+
+            {mode === "landing" && (
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => setMode("signup")}
+                  className="w-full py-3 bg-[#2d6a4f] text-white text-sm font-semibold rounded-xl hover:bg-[#1b4332] transition-colors"
+                >
+                  Create account
+                </button>
+                <button
+                  onClick={() => setMode("signin")}
+                  className="w-full py-3 text-white text-sm font-medium rounded-xl border border-white/20 hover:bg-white/10 transition-colors"
+                >
+                  Sign in
+                </button>
+                <div className="flex items-center gap-3 my-1">
+                  <div className="flex-1 h-px bg-white/15" />
+                  <span className="text-white/30 text-xs">or</span>
+                  <div className="flex-1 h-px bg-white/15" />
+                </div>
+                <button
+                  onClick={signInWithGoogle}
+                  className="w-full flex items-center justify-center gap-2.5 py-3 text-white text-sm font-medium rounded-xl border border-white/20 hover:bg-white/10 transition-colors"
+                >
+                  <GoogleIcon />
+                  Continue with Google
+                </button>
+              </div>
+            )}
+
+            {(mode === "signin" || mode === "signup") && (
+              <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                <h2 className="text-white font-semibold text-base mb-1">{mode === "signin" ? "Sign in" : "Create account"}</h2>
+
+                {mode === "signup" && (
+                  <input
+                    type="text"
+                    placeholder="Full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    className="w-full px-4 py-2.5 text-sm text-white placeholder-white/40 rounded-xl focus:outline-none focus:ring-1 focus:ring-white/30"
+                    style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}
+                  />
+                )}
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 text-sm text-white placeholder-white/40 rounded-xl focus:outline-none focus:ring-1 focus:ring-white/30"
+                  style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 text-sm text-white placeholder-white/40 rounded-xl focus:outline-none focus:ring-1 focus:ring-white/30"
+                  style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)" }}
+                />
+
+                {error && <p className="text-red-400 text-xs">{error}</p>}
+                {success && <p className="text-green-400 text-xs">{success}</p>}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3 bg-[#2d6a4f] text-white text-sm font-semibold rounded-xl hover:bg-[#1b4332] transition-colors disabled:opacity-50 mt-1"
+                >
+                  {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+                </button>
+
+                <button type="button" onClick={() => { setMode("landing"); setError(""); setSuccess(""); }} className="text-white/40 text-xs text-center hover:text-white/60 transition-colors">
+                  ← Back
+                </button>
+              </form>
+            )}
+          </div>
         </div>
-
-        <h1 style={{
-          fontFamily: "Georgia, serif",
-          fontWeight: 700,
-          fontSize: "clamp(1.6rem, 3.5vw, 2.5rem)",
-          color: "rgba(255,255,255,0.45)",
-          lineHeight: 1.15,
-          letterSpacing: "-0.02em",
-          marginBottom: "1.5rem",
-        }}>
-          Your recipes,<br />all in one place.
-        </h1>
-
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "1rem", marginBottom: "2.5rem", maxWidth: "420px", lineHeight: 1.6 }}>
-          Save the dishes you love and get personalised recommendations based on what you cook.
-        </p>
-
-        <button
-          onClick={signInWithGoogle}
-          className="flex items-center gap-3 px-6 py-3.5 bg-white/15 border border-white/30 backdrop-blur-sm rounded-xl text-sm font-medium text-white hover:bg-white/25 transition-colors"
-        >
-          <GoogleIcon />
-          Continue with Google
-        </button>
       </div>
     </div>
   );
