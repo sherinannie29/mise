@@ -50,7 +50,7 @@ export function GuestPage() {
           {/* Logo */}
           <div className="text-center mb-8">
             <MiseLogo white size="lg" />
-            <p className="text-white/70 text-xl mt-3 font-medium tracking-tight">Cook more. Eat better. Live well.</p>
+            <p className="text-white text-3xl mt-4 font-semibold tracking-tight">Cook more. Eat better. Live well.</p>
           </div>
 
           {/* Card */}
