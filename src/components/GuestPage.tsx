@@ -53,6 +53,14 @@ export function GuestPage() {
             <p className="text-white text-3xl mt-4 font-semibold tracking-tight">Cook more. Eat better. Live well.</p>
           </div>
 
+          {/* Feature highlights */}
+          <div className="flex justify-center gap-6 mb-8 text-white/60 text-sm">
+            <span>🍳 Recipes</span>
+            <span>🔥 Nutrition</span>
+            <span>💪 Fitness</span>
+            <span>🛒 Grocery</span>
+          </div>
+
           {/* Card */}
           <div className="rounded-2xl p-7" style={{ background: "rgba(255,255,255,0.10)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.18)" }}>
 
