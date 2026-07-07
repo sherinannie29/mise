@@ -45,7 +45,7 @@ export function GuestPage() {
       <div className="absolute inset-0" style={{ background: "rgba(5, 20, 10, 0.5)" }} />
 
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-2xl">
 
           {/* Logo */}
           <div className="text-center mb-8">
@@ -54,15 +54,48 @@ export function GuestPage() {
           </div>
 
           {/* Feature highlights */}
-          <div className="flex justify-center gap-6 mb-8 text-white/60 text-sm">
-            <span>🍳 Recipes</span>
-            <span>🔥 Nutrition</span>
-            <span>💪 Fitness</span>
-            <span>🛒 Grocery</span>
+          <div className="flex justify-center gap-6 mb-6 text-white/50 text-sm tracking-wide">
+            <span>Food</span>
+            <span>·</span>
+            <span>Nutrition</span>
+            <span>·</span>
+            <span>Fitness</span>
+          </div>
+
+          <p className="text-center text-white/70 text-sm mb-6 tracking-wide">One app. Three habits. Real results.</p>
+
+          {/* Hook line */}
+          <p className="text-center text-white/80 text-base font-medium mb-4">One app. Three habits. Real results.</p>
+
+          {/* Feature cards */}
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            {[
+              {
+                title: "Food",
+                description: "Save and organise your favourite dishes. Get AI recommendations based on what you cook.",
+              },
+              {
+                title: "Nutrition",
+                description: "Log meals, track calories and macros. Search millions of foods. Set daily goals and see trends.",
+              },
+              {
+                title: "Fitness",
+                description: "Connect Strava, track workouts and steps with Apple Health.",
+              },
+            ].map(({ title, description }) => (
+              <div
+                key={title}
+                className="rounded-2xl p-4"
+                style={{ background: "rgba(255,255,255,0.08)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.12)" }}
+              >
+                <p className="text-white font-semibold text-sm mb-2">{title}</p>
+                <p className="text-white/50 text-xs leading-relaxed">{description}</p>
+              </div>
+            ))}
           </div>
 
           {/* Card */}
-          <div className="rounded-2xl p-7" style={{ background: "rgba(255,255,255,0.10)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.18)" }}>
+          <div className="mx-auto max-w-xs rounded-2xl p-7" style={{ background: "rgba(255,255,255,0.10)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.18)" }}>
 
             {mode === "landing" && (
               <div className="flex flex-col gap-3">
