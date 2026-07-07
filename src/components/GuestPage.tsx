@@ -62,10 +62,7 @@ export function GuestPage() {
             <span>Fitness</span>
           </div>
 
-          <p className="text-center text-white/70 text-sm mb-6 tracking-wide">One app. Three habits. Real results.</p>
-
-          {/* Hook line */}
-          <p className="text-center text-white/80 text-base font-medium mb-4">One app. Three habits. Real results.</p>
+          <p className="text-center text-white/80 text-base font-medium mb-6">One app. Three habits. Real results.</p>
 
           {/* Feature cards */}
           <div className="grid grid-cols-3 gap-3 mb-6">
